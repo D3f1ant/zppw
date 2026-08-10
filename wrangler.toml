@@ -1,0 +1,11 @@
+name = "zppw"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zion-leads"
+database_id = "a175a67e-231e-4889-8b9f-06d45cce43a3"
+
+[vars]
+ADMIN_EMAIL = "LucasAchylles@gmail.com"
