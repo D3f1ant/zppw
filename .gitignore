@@ -1,0 +1,40 @@
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+.env
+.env.local
+
+# Node (if you ever install packages locally)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS garbage
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local dev artifacts
+*.log
+*.tmp
+*.bak
+dist/
+build/
+
+# Local databases (never push a local SQLite file)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Misc
+.cache/
+coverage/
