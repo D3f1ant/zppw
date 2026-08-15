@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Zion Precision Pressure Wash provides professional pressure washing and exterior cleaning services across Southern Utah."
+  />
+  <title>Zion Precision Pressure Wash | Southern Utah</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <nav aria-label="Primary navigation">
+    <a href="#top" class="logo" aria-label="Zion Precision Pressure Wash home">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 2 2 7l10 5 10-5-10-5Z"></path>
+        <path d="m2 17 10 5 10-5"></path>
+        <path d="m2 12 10 5 10-5"></path>
+      </svg>
+      Zion Precision <span>Pressure Wash</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="nav-links"
+    >
+      ☰
+    </button>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">More Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li>
+        <a href="tel:+14355250736" class="btn btn-primary">
+          Call Now
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-content">
+      <h1>
+        Restore Your Property.<br />
+        <span>Red Rock Tough.</span>
+      </h1>
+
+      <p>
+        Professional pressure washing and exterior cleaning services across
+        Southern Utah. We bring the precision. You enjoy the shine.
+      </p>
+
+      <a href="#quote" class="btn btn-primary hero-cta">
+        Get a Free Quote
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section id="quote">
+      <h2 class="section-title">Get a Free Quote</h2>
+      <p class="section-subtitle">
+        Tell us about your project and we will get back to you within 24 hours.
+      </p>
+
+      <div class="quote-section">
+        <form id="quoteForm" novalidate>
+          <div class="honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input
+              id="website"
+              type="text"
+              name="website"
+              tabindex="-1"
+              autocomplete="off"
+              value=""
+            />
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label for="name">Your name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Your name"
+                autocomplete="name"
+                maxlength="80"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="phone">Phone number</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                placeholder="(435) 525-0736"
+                autocomplete="tel"
+                inputmode="tel"
+                maxlength="25"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label for="email">Email address <span aria-hidden="true">(optional)</span></label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="Email address"
+                autocomplete="email"
+                maxlength="120"
+              />
+            </div>
+
+            <div>
+              <label for="service">Service needed</label>
+              <select id="service" name="service" required>
+                <option value="">Select a service</option>
+                <option value="House Wash">House Wash</option>
+                <option value="Driveway Cleaning">Driveway Cleaning</option>
+                <option value="Roof Cleaning">Roof Cleaning</option>
+                <option value="Fence Restoration">Fence Restoration</option>
+                <option value="Deck Cleaning">Deck Cleaning</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="details">Project details</label>
+          <textarea
+            id="details"
+            name="details"
+            rows="4"
+            maxlength="1200"
+            placeholder="Tell us about your project, square footage, and any specific concerns."
+          ></textarea>
+
+          <button type="submit" class="btn btn-primary submit-btn">
+            Send Request
+          </button>
+
+          <p class="form-disclaimer">
+            Do not include payment-card details, Social Security numbers, or
+            other sensitive information in this form.
+          </p>
+
+          <div id="formStatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div class="prefer-talk">
+        <p>Prefer to talk?</p>
+        <a href="tel:+14355250736" class="phone-big">
+          (435) 525-0736
+        </a>
+      </div>
+    </section>
+
+    <section id="services">
+      <h2 class="section-title">What We Clean</h2>
+      <p class="section-subtitle">
+        Residential and commercial exterior cleaning done right.
+      </p>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <h3>House Wash</h3>
+          <p>
+            Soft wash siding, stucco, and brick without damage. Safe for all
+            exterior surfaces.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>Driveway &amp; Concrete</h3>
+          <p>
+            High-pressure surface cleaning for driveways, walkways, patios,
+            and pool decks.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>Roof Cleaning</h3>
+          <p>
+            Remove algae, moss, and black streaks while helping extend the
+            life of your shingles.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>Fence Restoration</h3>
+          <p>
+            Bring weathered wood and vinyl fences back to life with a clean,
+            stain-ready finish.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="also-do">
+        <h2>We Also Do</h2>
+        <p>
+          <strong>Fence Repairs &amp; Installations</strong><br />
+          From pressure-treated wood to vinyl and aluminum, we repair and
+          install fencing built to handle Southern Utah sun and wind.
+        </p>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">Why Zion Precision</h2>
+      <p class="section-subtitle">
+        Precision methods, clear communication, and exterior cleaning that
+        respects your property.
+      </p>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <h3>Right Method</h3>
+          <p>
+            We use soft washing where it protects surfaces and pressure washing
+            where it delivers the best result.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>Local &amp; Reliable</h3>
+          <p>
+            Southern Utah service with clear communication, straightforward
+            pricing, and dependable scheduling.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <h3>Built for Results</h3>
+          <p>
+            We target dirt, algae, buildup, and stains to make your property
+            look clean and cared for.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <h2>Ready to Get Started?</h2>
+      <p>Call or fill out the quote form above. We respond quickly.</p>
+
+      <div class="contact-actions">
+        <a href="tel:+14355250736" class="btn btn-primary">
+          Call (435) 525-0736
+        </a>
+
+        <span class="or-divider">or</span>
+
+        <a
+          href="mailto:LucasAchylles@gmail.com"
+          class="btn btn-outline"
+        >
+          Email Us
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Zion Precision Pressure Wash. All rights reserved.</p>
+    <p>Southern Utah exterior cleaning and fence services.</p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
