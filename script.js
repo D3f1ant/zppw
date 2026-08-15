@@ -1,311 +1,137 @@
 (() => {
   "use strict";
 
-  const doc = document;
+  const form = document.getElementById("quoteForm");
+  const status = document.getElementById("formStatus");
+  const menuButton = document.querySelector(".menu-toggle");
+  const navLinks = document.querySelector(".nav-links");
 
-  const qs = (selector, scope = doc) => scope.querySelector(selector);
-
-  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-  const slider = qs("#baSlider");
-  const afterPanel = qs(".ba-after", slider || doc);
-  const handle = qs("#baHandle");
-  const range = qs("#baRange");
-
-  if (slider && afterPanel && handle && range) {
-    const updateSlider = (value) => {
-      const percent = clamp(Number(value) || 0, 0, 100);
-      afterPanel.style.width = `${percent}%`;
-      handle.style.left = `${percent}%`;
-      range.value = String(percent);
-      range.setAttribute("aria-valuenow", String(percent));
-    };
-
-    const updateFromPointer = (clientX) => {
-      const rect = slider.getBoundingClientRect();
-      if (!rect.width) return;
-      const percent = ((clientX - rect.left) / rect.width) * 100;
-      updateSlider(percent);
-    };
-
-    let isDragging = false;
-
-    const startDrag = (event) => {
-      isDragging = true;
-      if (event.cancelable) event.preventDefault();
-    };
-
-    const stopDrag = () => {
-      isDragging = false;
-    };
-
-    const onPointerMove = (event) => {
-      if (!isDragging) return;
-      const point = event.touches ? event.touches[0] : event;
-      if (!point) return;
-      updateFromPointer(point.clientX);
-    };
-
-    range.addEventListener("input", (event) => {
-      updateSlider(event.target.value);
-    });
-
-    slider.addEventListener("click", (event) => {
-      if (event.target === range) return;
-      updateFromPointer(event.clientX);
-    });
-
-    handle.addEventListener("mousedown", startDrag);
-    handle.addEventListener("touchstart", startDrag, { passive: false });
-
-    window.addEventListener("mouseup", stopDrag);
-    window.addEventListener("touchend", stopDrag);
-
-    window.addEventListener("mousemove", onPointerMove);
-    window.addEventListener("touchmove", onPointerMove, { passive: false });
-
-    updateSlider(50);
-  }
-
-  const menuToggle = qs(".menu-toggle");
-  const nav = qs(".nav");
-
-  if (menuToggle && nav) {
+  if (menuButton && navLinks) {
     const closeMenu = () => {
-      nav.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open navigation");
+      navLinks.classList.remove("active");
+      menuButton.setAttribute("aria-expanded", "false");
+      menuButton.setAttribute("aria-label", "Open navigation menu");
     };
 
-    const openMenu = () => {
-      nav.classList.add("is-open");
-      menuToggle.setAttribute("aria-expanded", "true");
-      menuToggle.setAttribute("aria-label", "Close navigation");
-    };
+    menuButton.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("active");
 
-    menuToggle.addEventListener("click", () => {
-      const isOpen = nav.classList.contains("is-open");
-      if (isOpen) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+      menuButton.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+      );
     });
 
-    nav.addEventListener("click", (event) => {
-      const link = event.target.closest("a");
-      if (link) closeMenu();
+    navLinks.addEventListener("click", (event) => {
+      if (event.target.closest("a")) closeMenu();
     });
 
-    window.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeMenu();
     });
-
-    document.addEventListener("click", (event) => {
-      const clickInsideNav = nav.contains(event.target);
-      const clickToggle = menuToggle.contains(event.target);
-      if (!clickInsideNav && !clickToggle) closeMenu();
-    });
   }
 
-  const form = qs("#quoteForm");
-  const formStatus = qs("#formStatus");
+  if (!form || !status) return;
 
-  if (form && formStatus) {
-    const fields = {
-      name: {
-        input: qs("#name"),
-        error: qs("#nameError"),
-        validate: (value) => {
-          const cleaned = value.trim().replace(/\s+/g, " ");
-          if (cleaned.length < 2) return "Please enter your full name.";
-          if (!/^[a-zA-Z0-9 .,'-]+$/.test(cleaned)) return "Name contains invalid characters.";
-          return "";
-        },
-        normalize: (value) => value.trim().replace(/\s+/g, " ")
-      },
-      phone: {
-        input: qs("#phone"),
-        error: qs("#phoneError"),
-        validate: (value) => {
-          const digits = value.replace(/\D/g, "");
-          if (digits.length < 10 || digits.length > 15) return "Please enter a valid phone number.";
-          return "";
-        },
-        normalize: (value) => value.trim()
-      },
-      email: {
-        input: qs("#email"),
-        error: qs("#emailError"),
-        validate: (value) => {
-          const email = value.trim();
-          if (!email) return "";
-          if (email.length > 120) return "Email is too long.";
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailPattern.test(email)) return "Please enter a valid email address.";
-          return "";
-        },
-        normalize: (value) => value.trim().toLowerCase()
-      },
-      service: {
-        input: qs("#service"),
-        error: qs("#serviceError"),
-        validate: (value) => {
-          if (!value.trim()) return "Please select a service.";
-          return "";
-        },
-        normalize: (value) => value.trim()
-      },
-      details: {
-        input: qs("#details"),
-        error: qs("#detailsError"),
-        validate: (value) => {
-          const cleaned = value.trim();
-          if (cleaned.length < 10) return "Please add a few details about the job.";
-          if (cleaned.length > 1200) return "Details are too long.";
-          return "";
-        },
-        normalize: (value) => value.trim().replace(/\r\n/g, "\n")
-      }
-    };
+  const submitButton = form.querySelector('button[type="submit"]');
 
-    const honeypot = qs("#website");
+  const setStatus = (message, type = "info") => {
+    status.textContent = message;
+    status.dataset.state = type;
+  };
 
-    const setError = (fieldName, message) => {
-      const field = fields[fieldName];
-      if (!field) return;
-      field.error.textContent = message;
-      field.input.setAttribute("aria-invalid", message ? "true" : "false");
-    };
+  const normalize = (value) =>
+    typeof value === "string"
+      ? value.replace(/\s+/g, " ").trim()
+      : "";
 
-    const validateField = (fieldName) => {
-      const field = fields[fieldName];
-      if (!field) return true;
-      const normalized = field.normalize(field.input.value);
-      field.input.value = normalized;
-      const message = field.validate(normalized);
-      setError(fieldName, message);
-      return !message;
-    };
+  const getValue = (name) => {
+    const element = form.elements.namedItem(name);
+    return element ? normalize(element.value) : "";
+  };
 
-    Object.keys(fields).forEach((fieldName) => {
-      const field = fields[fieldName];
-      field.input.addEventListener("blur", () => validateField(fieldName));
-      field.input.addEventListener("input", () => {
-        if (field.input.getAttribute("aria-invalid") === "true") {
-          validateField(fieldName);
-        }
-      });
-    });
-
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      formStatus.textContent = "";
-      let isValid = true;
-
-      if (honeypot && honeypot.value.trim() !== "") {
-        formStatus.textContent = "Request blocked.";
-        return;
-      }
-
-      Object.keys(fields).forEach((fieldName) => {
-        if (!validateField(fieldName)) isValid = false;
-      });
-
-      if (!isValid) {
-        formStatus.textContent = "Please fix the highlighted fields and try again.";
-        const firstInvalid = form.querySelector('[aria-invalid="true"]');
-        if (firstInvalid) firstInvalid.focus();
-        return;
-      }
-
-      const payload = Object.fromEntries(
-        Object.entries(fields).map(([key, field]) => [key, field.input.value])
-      );
-
-      console.log("Validated quote request payload:", payload);
-
-      formStatus.textContent = "Quote request captured locally. Connect this form to a secure backend endpoint for production.";
-      form.reset();
-
-      Object.keys(fields).forEach((fieldName) => setError(fieldName, ""));
-      Object.values(fields).forEach((field) => field.input.setAttribute("aria-invalid", "false"));
-    });
-  }
-})();
-/* ── QUOTE FORM HANDLER ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('quoteForm');
-  if (!form) return;
-
-  // Replace the green "captured locally" message with a live status area
-  const oldMsg = form.parentElement.querySelector('p[style*="color"], .form-note, .local-capture-msg');
-  if (oldMsg) oldMsg.remove();
-
-  let statusDiv = document.getElementById('formStatus');
-  if (!statusDiv) {
-    statusDiv = document.createElement('div');
-    statusDiv.id = 'formStatus';
-    statusDiv.style.marginTop = '14px';
-    statusDiv.style.fontSize = '14px';
-    statusDiv.style.fontWeight = '500';
-    statusDiv.style.minHeight = '22px';
-    form.appendChild(statusDiv);
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    statusDiv.textContent = '';
-    statusDiv.style.color = '';
-
-    const btn = form.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
     const payload = {
-      name: (form.querySelector('[name="name"]')?.value || '').trim(),
-      phone: (form.querySelector('[name="phone"]')?.value || '').trim(),
-      email: (form.querySelector('[name="email"]')?.value || '').trim(),
-      service: (form.querySelector('[name="service"]')?.value || '').trim(),
-      details: (form.querySelector('[name="details"]')?.value || '').trim(),
-      website: (form.querySelector('[name="website"]')?.value || '') // honeypot
+      name: getValue("name"),
+      phone: getValue("phone"),
+      email: getValue("email").toLowerCase(),
+      service: getValue("service"),
+      details: getValue("details"),
+      website: getValue("website")
     };
 
     if (payload.name.length < 2) {
-      statusDiv.textContent = 'Please enter your full name.';
-      statusDiv.style.color = '#ff6b6b';
-      btn.disabled = false; btn.textContent = originalText; return;
+      setStatus("Please enter your full name.", "error");
+      form.elements.namedItem("name")?.focus();
+      return;
     }
-    if (payload.phone.length < 7) {
-      statusDiv.textContent = 'Please enter a valid phone number.';
-      statusDiv.style.color = '#ff6b6b';
-      btn.disabled = false; btn.textContent = originalText; return;
+
+    const phoneDigits = payload.phone.replace(/\D/g, "");
+
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setStatus("Please enter a valid phone number.", "error");
+      form.elements.namedItem("phone")?.focus();
+      return;
     }
+
+    if (!payload.service) {
+      setStatus("Please select a service.", "error");
+      form.elements.namedItem("service")?.focus();
+      return;
+    }
+
+    if (
+      payload.email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)
+    ) {
+      setStatus("Please enter a valid email address.", "error");
+      form.elements.namedItem("email")?.focus();
+      return;
+    }
+
+    const originalButtonText = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Sending…";
+    setStatus("Sending your request…", "info");
 
     try {
-      const res = await fetch('/api/quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(payload)
       });
-      const data = await res.json().catch(() => ({}));
 
-      if (res.ok && data.ok) {
-        statusDiv.textContent = '✅ Quote sent! We\'ll contact you soon.';
-        statusDiv.style.color = '#4ade80';
-        form.reset();
-      } else {
-        statusDiv.textContent = data.error || 'Something went wrong. Try again.';
-        statusDiv.style.color = '#ff6b6b';
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(
+          result.error || "We could not send your request right now."
+        );
       }
-    } catch (err) {
-      statusDiv.textContent = 'Network error. Check connection and retry.';
-      statusDiv.style.color = '#ff6b6b';
-      console.error(err);
+
+      form.reset();
+      setStatus(
+        "Quote request received. Zion Precision Pressure Wash will contact you soon.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Quote form submission failed:", error);
+
+      setStatus(
+        error.message ||
+          "Unable to send your request. Please call (435) 525-0736.",
+        "error"
+      );
     } finally {
-      btn.disabled = false;
-      btn.textContent = originalText;
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     }
   });
-});
+})();
