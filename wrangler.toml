@@ -1,6 +1,8 @@
 name = "zppw"
 compatibility_date = "2026-08-15"
-pages_build_output_dir = "."
+
+[assets]
+directory = "."
 
 [[d1_databases]]
 binding = "DB"
