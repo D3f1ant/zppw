@@ -233,3 +233,79 @@
     });
   }
 })();
+/* ── QUOTE FORM HANDLER ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('quoteForm');
+  if (!form) return;
+
+  // Replace the green "captured locally" message with a live status area
+  const oldMsg = form.parentElement.querySelector('p[style*="color"], .form-note, .local-capture-msg');
+  if (oldMsg) oldMsg.remove();
+
+  let statusDiv = document.getElementById('formStatus');
+  if (!statusDiv) {
+    statusDiv = document.createElement('div');
+    statusDiv.id = 'formStatus';
+    statusDiv.style.marginTop = '14px';
+    statusDiv.style.fontSize = '14px';
+    statusDiv.style.fontWeight = '500';
+    statusDiv.style.minHeight = '22px';
+    form.appendChild(statusDiv);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusDiv.textContent = '';
+    statusDiv.style.color = '';
+
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const payload = {
+      name: (form.querySelector('[name="name"]')?.value || '').trim(),
+      phone: (form.querySelector('[name="phone"]')?.value || '').trim(),
+      email: (form.querySelector('[name="email"]')?.value || '').trim(),
+      service: (form.querySelector('[name="service"]')?.value || '').trim(),
+      details: (form.querySelector('[name="details"]')?.value || '').trim(),
+      website: (form.querySelector('[name="website"]')?.value || '') // honeypot
+    };
+
+    if (payload.name.length < 2) {
+      statusDiv.textContent = 'Please enter your full name.';
+      statusDiv.style.color = '#ff6b6b';
+      btn.disabled = false; btn.textContent = originalText; return;
+    }
+    if (payload.phone.length < 7) {
+      statusDiv.textContent = 'Please enter a valid phone number.';
+      statusDiv.style.color = '#ff6b6b';
+      btn.disabled = false; btn.textContent = originalText; return;
+    }
+
+    try {
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ok) {
+        statusDiv.textContent = '✅ Quote sent! We\'ll contact you soon.';
+        statusDiv.style.color = '#4ade80';
+        form.reset();
+      } else {
+        statusDiv.textContent = data.error || 'Something went wrong. Try again.';
+        statusDiv.style.color = '#ff6b6b';
+      }
+    } catch (err) {
+      statusDiv.textContent = 'Network error. Check connection and retry.';
+      statusDiv.style.color = '#ff6b6b';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  });
+});
